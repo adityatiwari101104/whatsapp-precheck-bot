@@ -1,0 +1,20 @@
+{
+  "name": "whatsapp-precheck-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Citizen document pre-check bot for CSC services over WhatsApp",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pdfkit": "^0.17.2"
+  }
+}

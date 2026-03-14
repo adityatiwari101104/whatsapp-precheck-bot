@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: whatsapp-precheck-bot
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        generateValue: false
+      # --- Bot config ---
+      - key: BOT_DISPLAY_NAME
+        value: CSC Sahayak AI
+      - key: WHATSAPP_PROVIDER
+        value: twilio
+      # --- Twilio ---
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_WHATSAPP_FROM
+        sync: false
+      # --- Meta (leave blank if using Twilio) ---
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: WHATSAPP_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      # --- CSC integration ---
+      - key: CSC_API_BEARER_TOKEN
+        sync: false
+      # Set DATA_DIR to /tmp so the data folder always exists on Render
+      - key: DATA_DIR
+        value: /tmp/precheck-data
+      # APP_BASE_URL: set this to your Render service URL after first deploy
+      # e.g. https://whatsapp-precheck-bot.onrender.com
+      - key: APP_BASE_URL
+        sync: false

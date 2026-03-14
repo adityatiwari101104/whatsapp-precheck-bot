@@ -586,6 +586,38 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, service: "whatsapp-precheck-bot" });
 });
 
+app.get("/", (req, res) => {
+  const baseUrl = getRequestBaseUrl(req);
+  return res.type("text/html").send(`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(BOT_DISPLAY_NAME)}</title>
+    <style>
+      body { margin: 0; font-family: "Segoe UI", sans-serif; background: #f7fafc; color: #1a202c; }
+      .wrap { max-width: 760px; margin: 40px auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; }
+      h1 { margin: 0 0 8px; font-size: 1.4rem; }
+      p { margin: 0 0 14px; color: #4a5568; }
+      ul { margin: 0; padding-left: 20px; }
+      li { margin: 8px 0; }
+      a { color: #0b7285; text-decoration: none; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>${escapeHtml(BOT_DISPLAY_NAME)} API is running</h1>
+      <p>This service is deployed successfully. Use these endpoints:</p>
+      <ul>
+        <li><a href="${escapeHtml(baseUrl)}/health">/health</a></li>
+        <li><a href="${escapeHtml(baseUrl)}/prechecks/view">/prechecks/view</a></li>
+        <li><a href="${escapeHtml(baseUrl)}/debug/twilio-last-hit">/debug/twilio-last-hit</a></li>
+      </ul>
+    </main>
+  </body>
+</html>`);
+});
+
 app.get("/public/whatsapp-launch-config", (req, res) => {
   return res.json(buildWhatsAppLaunchConfig(getRequestBaseUrl(req)));
 });

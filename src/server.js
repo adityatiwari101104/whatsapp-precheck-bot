@@ -697,10 +697,16 @@ app.all("/twilio/webhook", async (req, res) => {
 
     reply = addBranding(reply);
 
-    // Send reply via Twilio REST API to avoid delivery issues when TwiML
-    // responses are ignored/overridden by account-level routing.
-    await sendTextMessage(from, reply);
-    return res.type("text/xml").send("<Response></Response>");
+    // Prefer sending via Twilio REST API, but if that fails we still return
+    // TwiML so users receive a response from this webhook request.
+    try {
+      await sendTextMessage(from, reply);
+      return res.type("text/xml").send("<Response></Response>");
+    } catch (sendError) {
+      console.error("Twilio REST send failed, falling back to TwiML:", sendError?.response?.data || sendError.message);
+      const twiml = `<Response><Message>${escapeXml(reply)}</Message></Response>`;
+      return res.type("text/xml").send(twiml);
+    }
   } catch (error) {
     console.error("Twilio webhook error:", error?.response?.data || error.message);
     return res.type("text/xml").send("<Response></Response>");
